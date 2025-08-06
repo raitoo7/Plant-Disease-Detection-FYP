@@ -33,4 +33,8 @@ pip install -r requirements.txt
 python app.py
 
 5. Open your browser at http://localhost:5000
+## Project Background
+
+This project is a joint effort by three team members as part of our final year project. We collaborated to develop, modify, and improve the application to achieve its current functionality.
+
 
