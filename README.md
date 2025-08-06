@@ -18,7 +18,7 @@ The trained model file `resmodel.h5` is **not included** in this repository due 
 1. Clone the repo:
 
    ```bash
-   git clone https://github.com/yourusername/plant-disease-detection.git
+   git clone https://github.com/raitoo7/plant-disease-detection.git
    cd plant-disease-detection
 2. Install dependencies:
 
@@ -36,5 +36,6 @@ python app.py
 ## Project Background
 
 This project is a joint effort by three team members as part of our final year project. We collaborated to develop, modify, and improve the application to achieve its current functionality.
+
 
 
