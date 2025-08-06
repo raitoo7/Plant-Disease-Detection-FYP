@@ -22,9 +22,6 @@ The trained model file `resmodel.h5` is **not included** in this repository due 
    cd plant-disease-detection
 2. Install dependencies:
 
-bash
-Copy
-Edit
 pip install -r requirements.txt
 
 3. Add the resmodel.h5 file to the project root.
@@ -33,9 +30,11 @@ pip install -r requirements.txt
 python app.py
 
 5. Open your browser at http://localhost:5000
+   
 ## Project Background
 
 This project is a joint effort by three team members as part of our final year project. We collaborated to develop, modify, and improve the application to achieve its current functionality.
+
 
 
 
