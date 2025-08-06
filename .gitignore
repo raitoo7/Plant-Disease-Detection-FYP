@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+resmodel.h5
+venv/
+env/
+.vscode/
+.DS_Store
+.ipynb_checkpoints/
+*.log
+*.sqlite3
+*.so
+*.egg-info/
+dist/
+build/
+.eggs/

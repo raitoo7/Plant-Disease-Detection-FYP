@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plant Disease Classification</title>
+    <style>
+        body {
+            background-image: url('/static/backgroundfinal.jpg');
+            background-size: cover;
+            background-position: center;
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 450px;
+            max-width: 90%;
+            opacity: 0.9;
+        }
+
+        .navbar {
+            width: 100%;
+            background-color: white;
+            padding: 2px 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            opacity: 0.7;
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+            width: auto;
+        }
+
+        .navbar .nav-links {
+            list-style-type: none;
+            display: flex;
+            gap: 20px;
+            font-size: large;
+            font-weight: bold;
+     
+        }
+   
+
+        .navbar a {
+            color: black;
+            text-decoration:none;
+            padding: 8px 50px;
+            transition: background-color 0.3s;
+            border-radius: 5px;
+            /* padding-right: 50px; */
+        }
+        .navbar a:hover {
+    color: #129616; /* Green color when hovered */
+    background-color: rgba(0, 0, 0, 0.1); /* Optional background color change on hover */
+
+        }
+       
+        h1 {
+            font-family: 'Georgia', serif;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: #4CAF50;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        input[type="file"] {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 2px solid #4CAF50;
+            border-radius: 5px;
+            width: 100%;
+            font-size: 1rem;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #0f4711;
+        }
+
+        button:active {
+            transform: scale(0.95);
+        }
+
+        #image-container {
+            margin-top: 20px;
+            display: none;
+        }
+
+        #preview {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .result, .error, .success-message {
+            margin-top: 20px;
+            font-size: 1.1rem;
+        }
+
+        .error {
+            color: #ff4444;
+        }
+
+        .success-message {
+            color: #4CAF50;
+        }
+
+        .confidence-label {
+    color: red;
+    font-weight: bold;
+    font-size: 20px;
+}
+.low-confidence-warning {
+    color: orange;
+    font-weight: bold;
+    font-size: 18px;
+    margin-top: 10px;
+}
+
+
+        .cause-label {
+            color: red;
+            font-weight: bold;
+            font-size: 20px;
+        }
+
+        .suggestion-label {
+            color: red;
+            font-weight: bold;
+            font-size: 20px;
+        }
+        #reset-button {
+    position: fixed; /* Keeps the button always visible */
+    bottom: 20px; /* Distance from the bottom */
+    right: 20px; /* Distance from the right */
+    background-color: red;
+    color: white;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.2s;
+    z-index: 1000; /* Ensures it stays on top of other elements */
+    display: none; /* Hidden by default */
+}
+
+#reset-button:hover {
+    background-color: darkred;
+}
+
+
+
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <img src="/static/logo.jpg" alt="Logo">
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">About Us</a></li>
+            <li><a href="/contact">Contact Us</a></li>
+        </ul>
+    </div>
+    
+            
+    </div>
+
+    <div class="container">
+        <h1>Plant Leaf Disease Classification</h1>
+        <form id="preview-form" enctype="multipart/form-data">
+            <label for="img_file">Choose an image file:</label>
+            <input type="file" name="img_file" id="img_file" accept="image/*" onchange="previewImage()" required>
+            <button type="button" onclick="submitForm()">Submit</button>
+        </form>
+
+        <div id="image-container">
+            <img id="preview" alt="Uploaded Image">
+        </div>
+      
+
+        <div class="result"></div>
+        
+
+      
+        <div class="success-message"></div>
+        <div class="error"></div>
+        
+        </div>
+    </div>
+   
+        <button id="reset-button" onclick="resetPage()">Upload New Image</button>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script>
+     function previewImage() {
+    var input = document.getElementById('img_file');
+    var imgContainer = document.getElementById('image-container');
+    var img = document.getElementById('preview');
+    var resetButton = document.getElementById('reset-button'); // Get reset button
+
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+            img.src = e.target.result;
+            img.style.maxWidth = '256px';
+            imgContainer.style.display = 'block';
+
+         
+            //  Show the reset button when an image is uploaded
+            resetButton.style.display = 'block';
+        };
+
+        reader.readAsDataURL(input.files[0]);
+    } else {
+        imgContainer.style.display = 'none';
+
+        // Hide the reset button if no image is selected
+        resetButton.style.display = 'none';
+        console.log("No image selected. Hiding reset button.");
+    }
+}
+
+
+
+        function submitForm() {
+            previewImage();
+
+            $.ajax({
+    type: 'POST',
+    url: '/predict',
+    data: new FormData($('#preview-form')[0]),
+    contentType: false,
+    processData: false,
+    success: function(response) {
+    if (response && response.predicted_class_name) {
+        $('.result').html('<h2>Prediction: ' + response.predicted_class_name + '</h2>');
+
+        if (response.confidence_score && response.confidence_score !== "NaN%") {
+            $('.result').append('<h3><span class="confidence-label">Confidence:</span> ' + response.confidence_score + '</h3>');
+        } else {
+            $('.result').append('<h3><span class="confidence-label">Confidence:</span> Not Available</h3>');
+        }
+
+        // Ensure confidence warning is shown when available
+        if (response.confidence_warning && response.confidence_warning.trim() !== "") {
+            $('.result').append('<h3 class="low-confidence-warning">' + response.confidence_warning + '</h3>');
+        }
+
+        if (response.second_best_prediction && response.second_best_confidence) {
+            $('.result').append('<h3><span class="confidence-label">Second Best Prediction:</span> ' + response.second_best_prediction + ' (' + response.second_best_confidence + ')</h3>');
+        }
+
+        if (response.reason_message) {
+            $('.result').append('<h3><span class="cause-label">Cause:</span> ' + response.reason_message + '</h3>');
+        }
+        if (response.solution_message) {
+            $('.result').append('<h3><span class="suggestion-label">Suggestion:</span> ' + response.solution_message + '</h3>');
+        }
+    } else {
+        $('.error').text('Invalid response from the server');
+    }
+},
+
+
+
+
+    error: function() {
+        $('.error').text('Error occurred while submitting the form.');
+    }
+});
+}
+function resetPage() {
+    console.log("Reset button clicked! Resetting page...");
+
+    // Clear previous results
+    $('.result').html("");
+    $('.success-message').html("");
+    $('.error').html("");
+
+    //  Reset file input field
+    $('#img_file').val("");
+
+    //  Hide the image preview
+    $('#image-container').hide();
+
+    //  Reset the preview image
+    $('#preview').attr('src', '');
+
+    //  Hide the reset button
+    $('#reset-button').hide();
+
+    console.log("Page reset. Reset button hidden.");
+}
+
+
+    </script>
+</body>
+</html>
